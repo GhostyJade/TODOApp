@@ -1,0 +1,48 @@
+.Creator {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+}
+
+.Creator-Container {
+    position: absolute;
+    background-color: #e1e1e1;
+    width: fit-content;
+    height: fit-content;
+    display: block;
+    z-index: 10;
+}
+
+.Creator-Header {
+    width: 100%;
+    height: 100%;
+    background-color: #323232;
+    margin: 0;
+}
+
+.Creator-Header p {
+    color: #ffffff;
+    padding: 5px;
+    margin: 0;
+    text-align: center;
+}
+
+.Creator-Maker {
+    height: 100%;
+    position: relative;
+}
+
+.Creator-Maker input {
+    position: relative;
+}
+
+.Creator-Maker textarea {
+    position: relative;
+}
+
+.Creator-Menubar {
+    background-color: #323232;
+    height: 32px;
+    width: 100%;
+}

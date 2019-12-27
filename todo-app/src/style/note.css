@@ -1,0 +1,27 @@
+.note {
+    width: fit-content;
+    height: fit-content;
+    margin: 10px;
+    border: #333333;
+    border-style: solid;
+}
+
+.note-header{
+    background-color: #333333;
+    display: inline-block;
+    width: 100%;
+    height: fit-content;
+}
+
+.note-content{
+    display: inline-block;
+    width: 100%;
+    background-color: #cccccc;
+}
+
+.note-title {
+    color: #ffffff;
+    text-align: center;
+    margin-top:5px;
+    margin-bottom:5px;
+}

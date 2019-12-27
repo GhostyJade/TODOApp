@@ -1,0 +1,35 @@
+.bodymain {
+    padding-top: 3px;
+    padding-bottom: 40px
+}
+
+.link-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    display: inline;
+    margin: 0;
+    padding: 0
+}
+
+.link-button:focus,
+.link-button:hover {
+    text-decoration: none;
+    outline: 0;
+    box-shadow: none!important
+}
+
+.btn-container {
+    margin: 3px;
+    width: fit-content;
+    height: fit-content;
+    float: right;
+}
+
+.Body-Bar {
+    width: 100%;
+    height: 40px;
+    background-color: #323232;
+    display: block;
+}
