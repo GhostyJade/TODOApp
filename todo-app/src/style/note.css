@@ -1,6 +1,7 @@
 .note {
     width: fit-content;
     height: fit-content;
+    min-width: 100px;
     margin: 10px;
     border: #333333;
     border-style: solid;
