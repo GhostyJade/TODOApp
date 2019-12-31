@@ -8,17 +8,43 @@ import NoteCreator from './NoteCreator'
 
 import menu_icon from '../icons/icn-menu.svg'
 
+const DB_NAME = "GhostyJade-TodoApp"
+const DB_VERSION = 1
+const DB_STORENAME = "notes"
+
 class BodyContent extends Component {
 
     constructor(props) {
         super(props)
         this.state = { noteList: [], creatorVisibility: false }
+        this.initDB()
+    }
+
+    componentDidMount() {
+        this.getAllData().then(savedNotes => {
+            setTimeout(() => {
+                this.setState({ noteList: savedNotes })
+            }, 50)
+        })
     }
 
     saveNote = (event) => {
         this.setState(oldState => ({
-            noteList: [...oldState.noteList, { title: event.title, content: event.content }]
+            noteList: [...oldState.noteList, { title: event.title, content: event.content, completed: false }]
         }))
+        this.state.noteList.forEach(e => {
+            console.log(e)
+        })
+        var request = window.indexedDB.open(DB_NAME)
+        request.onsuccess = (event) => {
+            var transaction = event.target.value.transaction([DB_STORENAME], "readwrite")
+            transaction.oncomplete = (event) => {
+                console.log("Notes saved successfully")
+            }
+            transaction.onerror = (event) => {
+                console.error("Error on writing to database: " + event.target.errorCode)
+            }
+        }
     }
 
     changeCreatorVisibility() {
@@ -37,6 +63,56 @@ class BodyContent extends Component {
                 <NoteCreator visibility={this.state.creatorVisibility} save={this.saveNote.bind(this)} />
             </main>
         );
+    }
+
+    initDB = () => {
+        if (!window.indexedDB) {
+            console.log("Indexed DB not supported by this browser");
+            return;
+        }
+        console.log("Opening DB")
+        var request = window.indexedDB.open(DB_NAME, DB_VERSION)
+        request.onerror = function (event) {
+            console.error("Couldn't allocate IndexedDB instance")
+        }
+        request.onsuccess = (event) => {
+            console.log("Successfully allocated IndexedDB instance")
+            //this.db = event.target.result
+        }
+        request.onupgradeneeded = (event) => {
+            var db = event.target.result
+            var objectStore = db.createObjectStore(DB_STORENAME, { keyPath: "title" })
+            objectStore.createIndex("title", "title", { unique: false })
+            objectStore.createIndex("content", "content", { unique: false })
+            objectStore.createIndex("completed", "completed", { unique: false })
+        }
+    }
+
+    async storeData(value) {
+
+    }
+
+    getData() {
+        console.log(this.db)
+    }
+
+    getAllData = async () => {
+        var notes = []
+        var request = window.indexedDB.open(DB_NAME)
+        request.onsuccess = (event) => {
+            var objectStore = event.target.result.transaction(DB_STORENAME).objectStore(DB_STORENAME)
+            objectStore.openCursor().onsuccess = (event) => {
+                var cursor = event.target.result
+                if (cursor) {
+                    notes.push(cursor.value)
+                    cursor.continue()
+                } else {
+                    console.log("Got all notes " + notes)
+                    notes.push({ title: "dummy note", content: "i'm an useless note", completed: false })
+                }
+            }
+        }
+        return notes
     }
 }
 

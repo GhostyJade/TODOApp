@@ -6,7 +6,7 @@ class NoteVisualizer extends Component {
 
     render() {
         const items = this.props.notes.map(e=>{
-            return <Note key={e.title} title={e.title} content={e.content} />
+            return <Note key={e.title} title={e.title} content={e.content} completed={e.completed} />
         })
         return(
             items

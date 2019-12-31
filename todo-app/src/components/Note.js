@@ -4,6 +4,8 @@ import '../style/note.css'
 
 class Note extends Component {
 
+    //completed updating
+
     render() {
         return (
             <div className="note">

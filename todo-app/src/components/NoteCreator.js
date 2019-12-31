@@ -48,7 +48,7 @@ class NoteCreator extends Component {
                             <button className="btn-container btn-container-28 link-button"
                                 onClick={
                                     () => {
-                                        if (this.state.title !== '' && this.state.content !== '') {
+                                        if ((this.state.title !== '' || this.state.title !== ' ') && (this.state.content !== '' || this.state.content !== ' ')) {
                                             this.props.save({ title: this.state.title, content: this.state.content });
                                             this.setState({ title: "", content: "" })
                                         }
