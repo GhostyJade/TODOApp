@@ -20,6 +20,24 @@ class BodyContent extends Component {
         this.initDB()
     }
 
+    updateExistingElement = (data) => {
+        var request = window.indexedDB.open(DB_NAME)
+        request.onsuccess = (event) => {
+            var objectStore = event.target.result.transaction([DB_STORENAME], "readwrite").objectStore(DB_STORENAME).get(data);
+            objectStore.onerror = (event) => {
+                console.error(event)
+            }
+            objectStore.onsuccess = (event) => {
+                console.log(event)
+            }
+        }
+        request.onerror = (event) => {
+            console.error(event)
+        }
+    }
+
+    deleteNoteFromDatabase = (noteName) => { }
+
     componentDidMount() {
         this.getAllData().then(savedNotes => {
             setTimeout(() => {
@@ -29,20 +47,26 @@ class BodyContent extends Component {
     }
 
     saveNote = (event) => {
+        console.error(event)
         this.setState(oldState => ({
-            noteList: [...oldState.noteList, { title: event.title, content: event.content, completed: false }]
+            noteList: [...oldState.noteList, { title: event.title, content: event.content, completed: event.completed }]
         }))
-        this.state.noteList.forEach(e => {
+        /*this.state.noteList.forEach(e => {
             console.log(e)
-        })
+        })*/
         var request = window.indexedDB.open(DB_NAME)
-        request.onsuccess = (event) => {
-            var transaction = event.target.value.transaction([DB_STORENAME], "readwrite")
-            transaction.oncomplete = (event) => {
-                console.log("Notes saved successfully")
+        request.onsuccess = (e) => {
+            var transaction = e.target.result.transaction([DB_STORENAME], "readwrite")
+            transaction.oncomplete = (e) => {
+                console.log("Note saved successfully")
             }
-            transaction.onerror = (event) => {
-                console.error("Error on writing to database: " + event.target.errorCode)
+            transaction.onerror = (e) => {
+                console.error("Error on writing to database: " + e.target.errorCode)
+            }
+            var objectStore = transaction.objectStore(DB_STORENAME)
+            var save = objectStore.add(event)
+            save.onsuccess = (e) => {
+
             }
         }
     }

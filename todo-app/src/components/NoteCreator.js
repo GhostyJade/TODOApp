@@ -49,7 +49,7 @@ class NoteCreator extends Component {
                                 onClick={
                                     () => {
                                         if ((this.state.title !== '' || this.state.title !== ' ') && (this.state.content !== '' || this.state.content !== ' ')) {
-                                            this.props.save({ title: this.state.title, content: this.state.content });
+                                            this.props.save({ title: this.state.title, content: this.state.content, completed:false });
                                             this.setState({ title: "", content: "" })
                                         }
                                     }
