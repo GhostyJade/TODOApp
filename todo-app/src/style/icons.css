@@ -31,6 +31,14 @@
     text-align: center;
 }
 
+.btn-container-square {
+    display: block;
+    background-color: black;
+    margin:auto;
+    margin-right: 5px;
+    
+}
+
 .btn-container-32 {
     height: 32px;
     width: 32px;

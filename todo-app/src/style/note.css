@@ -9,8 +9,9 @@
 
 .note-header{
     background-color: #333333;
-    display: inline-block;
+    display: inline-flex;
     width: 100%;
+    float: right;
     height: fit-content;
 }
 
@@ -25,4 +26,9 @@
     text-align: center;
     margin-top:5px;
     margin-bottom:5px;
+}
+
+.completed-box{
+    width: 28px;
+    height: 28px;
 }
