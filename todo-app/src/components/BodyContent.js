@@ -20,15 +20,22 @@ class BodyContent extends Component {
         this.initDB()
     }
 
-    updateExistingElement = (data) => {
+    updateExistingElement = (element, value) => { //change to the entire object
         var request = window.indexedDB.open(DB_NAME)
         request.onsuccess = (event) => {
-            var objectStore = event.target.result.transaction([DB_STORENAME], "readwrite").objectStore(DB_STORENAME).get(data);
-            objectStore.onerror = (event) => {
+            var objectStore = event.target.result.transaction([DB_STORENAME], "readwrite").objectStore(DB_STORENAME)
+            var item = objectStore.get(element.title)
+            item.onerror = (event) => {
                 console.error(event)
             }
-            objectStore.onsuccess = (event) => {
-                console.log(event)
+            item.onsuccess = (event) => {
+                var data = event.target.result
+                data.completed = value
+                var requestUpdate = objectStore.put(data)
+                requestUpdate.onsuccess = (event) => {
+                    console.log("Successfully updated")
+                }
+                requestUpdate.onerror = (event) => console.error("Failed to update the entry: " + event.errorCode)
             }
         }
         request.onerror = (event) => {
@@ -36,7 +43,18 @@ class BodyContent extends Component {
         }
     }
 
-    deleteNoteFromDatabase = (noteName) => { }
+    deleteNoteFromDatabase = (noteName) => {
+        var db = window.indexedDB.open(DB_NAME)
+        db.onsuccess = (event) => {
+            var request = event.target.result.transaction([DB_STORENAME], "readwrite").objectStore(DB_STORENAME).delete(noteName)
+            request.onsuccess = (event) => {
+                this.setState({ noteList: this.state.noteList.filter(e => e.title !== noteName) })
+            }
+        }
+        db.onerror = (event) => {
+            console.error(event)
+        }
+    }
 
     componentDidMount() {
         this.getAllData().then(savedNotes => {
@@ -47,13 +65,9 @@ class BodyContent extends Component {
     }
 
     saveNote = (event) => {
-        console.error(event)
         this.setState(oldState => ({
             noteList: [...oldState.noteList, { title: event.title, content: event.content, completed: event.completed }]
         }))
-        /*this.state.noteList.forEach(e => {
-            console.log(e)
-        })*/
         var request = window.indexedDB.open(DB_NAME)
         request.onsuccess = (e) => {
             var transaction = e.target.result.transaction([DB_STORENAME], "readwrite")
@@ -65,9 +79,7 @@ class BodyContent extends Component {
             }
             var objectStore = transaction.objectStore(DB_STORENAME)
             var save = objectStore.add(event)
-            save.onsuccess = (e) => {
-
-            }
+            save.onsuccess = (e) => { }
         }
     }
 
@@ -83,7 +95,7 @@ class BodyContent extends Component {
                         <div className="btn btn-28 btn-menu" src={menu_icon} alt="menu" />
                     </button>
                 </div>
-                <NoteVisualizer notes={this.state.noteList} />
+                <NoteVisualizer notes={this.state.noteList} delete={this.deleteNoteFromDatabase.bind(this)} update={this.updateExistingElement.bind(this)} />
                 <NoteCreator visibility={this.state.creatorVisibility} save={this.saveNote.bind(this)} />
             </main>
         );
@@ -101,7 +113,6 @@ class BodyContent extends Component {
         }
         request.onsuccess = (event) => {
             console.log("Successfully allocated IndexedDB instance")
-            //this.db = event.target.result
         }
         request.onupgradeneeded = (event) => {
             var db = event.target.result
@@ -110,14 +121,6 @@ class BodyContent extends Component {
             objectStore.createIndex("content", "content", { unique: false })
             objectStore.createIndex("completed", "completed", { unique: false })
         }
-    }
-
-    async storeData(value) {
-
-    }
-
-    getData() {
-        console.log(this.db)
     }
 
     getAllData = async () => {
@@ -131,8 +134,7 @@ class BodyContent extends Component {
                     notes.push(cursor.value)
                     cursor.continue()
                 } else {
-                    console.log("Got all notes " + notes)
-                    notes.push({ title: "dummy note", content: "i'm an useless note", completed: false })
+                    console.log("Loaded all notes ")
                 }
             }
         }
