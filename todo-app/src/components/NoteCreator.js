@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import '../style/notecreator.css'
-
-
 class NoteCreator extends Component {
 
     constructor(props) {
@@ -45,7 +42,7 @@ class NoteCreator extends Component {
                         </div>
                         <div className="Creator-Menubar">
 
-                            <button className="btn-container btn-container-28 link-button"
+                            <button className="btn-container-square btn-container-28 link-button"
                                 onClick={
                                     () => {
                                         if ((this.state.title !== '' || this.state.title !== ' ') && (this.state.content !== '' || this.state.content !== ' ')) {

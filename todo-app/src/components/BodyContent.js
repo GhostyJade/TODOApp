@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import '../style/bodycontent.css'
-import '../style/icons.css'
-
 import NoteVisualizer from './NoteVisualizer'
 import NoteCreator from './NoteCreator'
 

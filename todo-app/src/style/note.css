@@ -22,10 +22,18 @@
 }
 
 .note-title {
-    color: #ffffff;
     text-align: center;
+    margin: auto;
     margin-top:5px;
     margin-bottom:5px;
+}
+
+.note-title-completed-true {
+    color: #00f200;
+}
+
+.note-title-completed-false {
+    color: #ffffff;
 }
 
 .completed-box{
