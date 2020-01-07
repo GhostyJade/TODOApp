@@ -3,17 +3,17 @@ import React, { Component } from 'react';
 import NoteVisualizer from './NoteVisualizer'
 import NoteCreator from './NoteCreator'
 
-import menu_icon from '../icons/icn-menu.svg'
+import { Icon } from './Icons'
 
 const DB_NAME = "GhostyJade-TodoApp"
-const DB_VERSION = 1
+const DB_VERSION = 3
 const DB_STORENAME = "notes"
 
 class BodyContent extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { noteList: [], creatorVisibility: false }
+        this.state = { noteList: [], creatorVisibility: false, id: -1 }
         this.initDB()
     }
 
@@ -40,6 +40,9 @@ class BodyContent extends Component {
         }
     }
 
+    /**
+     * Delete the specified note from the indexedDB using the specified note name
+     */
     deleteNoteFromDatabase = (noteName) => {
         var db = window.indexedDB.open(DB_NAME)
         db.onsuccess = (event) => {
@@ -56,14 +59,18 @@ class BodyContent extends Component {
     componentDidMount() {
         this.getAllData().then(savedNotes => {
             setTimeout(() => {
-                this.setState({ noteList: savedNotes })
+                var lastId = -1
+                savedNotes.forEach(e => { if (e.id > lastId) lastId = e.id })
+                this.setState({ noteList: savedNotes, id: lastId + 1 })
             }, 50)
         })
     }
 
     saveNote = (event) => {
+        event.id = this.state.id
         this.setState(oldState => ({
-            noteList: [...oldState.noteList, { title: event.title, content: event.content, completed: event.completed }]
+            noteList: [...oldState.noteList, { title: event.title, content: event.content, completed: event.completed, id: event.id }],
+            id: this.state.id + 1
         }))
         var request = window.indexedDB.open(DB_NAME)
         request.onsuccess = (e) => {
@@ -77,6 +84,7 @@ class BodyContent extends Component {
             var objectStore = transaction.objectStore(DB_STORENAME)
             var save = objectStore.add(event)
             save.onsuccess = (e) => { }
+            save.onerror = (e) => { console.error(e) }
         }
     }
 
@@ -86,12 +94,14 @@ class BodyContent extends Component {
 
     render() {
         return (
-            <main className="bodymain">
-                <div className="Body-Bar">
-                    <button className="btn-container btn-container-32 link-button" onClick={this.changeCreatorVisibility.bind(this)}>
-                        <div className="btn btn-28 btn-menu" src={menu_icon} alt="menu" />
-                    </button>
-                </div>
+            <main>
+                <nav className="navbar">
+                    <div className="navbar-end">
+                        <button className="navbar-item button" onClick={this.changeCreatorVisibility.bind(this)}>
+                            <Icon icon="ellipsis-v" />
+                        </button>
+                    </div>
+                </nav>
                 <NoteVisualizer notes={this.state.noteList} delete={this.deleteNoteFromDatabase.bind(this)} update={this.updateExistingElement.bind(this)} />
                 <NoteCreator visibility={this.state.creatorVisibility} save={this.saveNote.bind(this)} />
             </main>
@@ -117,6 +127,7 @@ class BodyContent extends Component {
             objectStore.createIndex("title", "title", { unique: false })
             objectStore.createIndex("content", "content", { unique: false })
             objectStore.createIndex("completed", "completed", { unique: false })
+            objectStore.createIndex("id", "id", { unique: false })
         }
     }
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Icon } from './Icons'
 
 class Note extends Component {
 
@@ -19,19 +20,26 @@ class Note extends Component {
 
     //TODO consider \n when saving a note
     render() {
-        const completed = this.state.completed
+        const completed = (this.state.completed ? "success" : "danger")
         return (
-            <div className="note">
-                <div className="note-header">
-                    <input className="completed-box" type="checkbox" defaultChecked={this.props.completed} onChange={this.checked.bind(this)} />
-                    <h3 className={"note-title note-title-completed-" + completed}>{this.props.title}</h3>
-                    <button className="btn-container-square btn-container-28 link-button" onClick={() => this.deleteNote()}>
-                        <div className="btn btn-22 btn-delete">
+            <div className="column is-narrow">
+                <div className="tile">
+                    <div className="title is-5 is-vertical notification is-info">
+                        <div className="tile">
+                            <div className="field">
+                                <input id={"complete-" + this.props.id} className={"is-checkradio is-block is-large is-" + completed} type="checkbox" defaultChecked={this.props.completed} onChange={this.checked.bind(this)} />
+                                <label htmlFor={"complete-" + this.props.id} className="title">{this.props.title}</label>
+                            </div>
+                            <button className="button" onClick={() => this.deleteNote()}>
+                                <Icon icon="trash" />
+                                <div className="btn btn-22 btn-delete">
+                                </div>
+                            </button>
                         </div>
-                    </button>
-                </div>
-                <div className="note-content">
-                    <p>{this.props.content}</p>
+                        <div className="tile">
+                            <p>{this.props.content}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
