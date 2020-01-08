@@ -1,18 +1,29 @@
 import React, { Component } from 'react'
 import { Icon } from './Icons'
-
+/**
+ * This is the Todo/Note holder. It stores note properties (title and content) and render it
+ */
 class Note extends Component {
 
+    /**
+     * class constructor
+     * @param {*} props 
+     */
     constructor(props) {
         super(props)
         this.state = { completed: this.props.completed }
     }
-    //(implementing colors to say completed or not): update required, missing notes priorities
 
+    /**
+     * called when user click to the trash button. it delete the note from the DB and removes it from UI
+     */
     deleteNote() {
         this.props.delete(this.props.title)
     }
 
+    /**
+     * called when user mark note as completed. it updates UI and stores completed value into DB 
+     */
     checked(e) {
         this.setState({ completed: e.target.checked })
         this.props.onComplete(this.props, e.target.checked)
@@ -32,8 +43,6 @@ class Note extends Component {
                             </div>
                             <button className="button" onClick={() => this.deleteNote()}>
                                 <Icon icon="trash" />
-                                <div className="btn btn-22 btn-delete">
-                                </div>
                             </button>
                         </div>
                         <div className="tile">

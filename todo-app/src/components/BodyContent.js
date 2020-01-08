@@ -5,6 +5,7 @@ import NoteCreator from './NoteCreator'
 
 import { Icon } from './Icons'
 
+/**Some constants used from the database*/
 const DB_NAME = "GhostyJade-TodoApp"
 const DB_VERSION = 3
 const DB_STORENAME = "notes"
@@ -56,6 +57,9 @@ class BodyContent extends Component {
         }
     }
 
+    /**
+     * Called after this component is mounted. It's used to load notes into UI
+     */
     componentDidMount() {
         this.getAllData().then(savedNotes => {
             setTimeout(() => {
@@ -66,10 +70,13 @@ class BodyContent extends Component {
         })
     }
 
-    saveNote = (event) => {
-        event.id = this.state.id
+    /**
+     * Save the specified note into indexedDB and add note into UI
+     */
+    saveNote = (todo) => {
+        todo.id = this.state.id
         this.setState(oldState => ({
-            noteList: [...oldState.noteList, { title: event.title, content: event.content, completed: event.completed, id: event.id }],
+            noteList: [...oldState.noteList, { title: todo.title, content: todo.content, completed: todo.completed, id: todo.id }],
             id: this.state.id + 1
         }))
         var request = window.indexedDB.open(DB_NAME)
@@ -82,12 +89,14 @@ class BodyContent extends Component {
                 console.error("Error on writing to database: " + e.target.errorCode)
             }
             var objectStore = transaction.objectStore(DB_STORENAME)
-            var save = objectStore.add(event)
+            var save = objectStore.add(todo)
             save.onsuccess = (e) => { }
             save.onerror = (e) => { console.error(e) }
         }
     }
-
+    /**
+     * show/hide note creator frame
+     */
     changeCreatorVisibility() {
         this.setState({ creatorVisibility: !this.state.creatorVisibility });
     }
@@ -108,6 +117,9 @@ class BodyContent extends Component {
         );
     }
 
+    /**
+     * create the DB for this app if doesn't already exists
+     */
     initDB = () => {
         if (!window.indexedDB) {
             console.log("Indexed DB not supported by this browser");
@@ -131,6 +143,9 @@ class BodyContent extends Component {
         }
     }
 
+    /**
+     * load notes from DB
+     */
     getAllData = async () => {
         var notes = []
         var request = window.indexedDB.open(DB_NAME)

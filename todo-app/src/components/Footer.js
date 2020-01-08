@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+/**
+ * @deprecated this class is useless
+ */
 class Footer extends Component {
 
     render() {
