@@ -22,3 +22,4 @@ It uses the indexedDB API [[Docs](https://developer.mozilla.org/en-US/docs/Web/A
 - Todo features ~~(maybe...well, this is an inception)~~:
     - Improve UI items alignement
     - Change storing mechanism (use uuid instead of note title)
+    - Set NoteCreator z-index over other elements (like ~~simplifying~~ "topmost" on WPF forms)
