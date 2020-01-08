@@ -4,7 +4,7 @@ import './App.sass'
 
 import Header from './components/Header';
 import Body from './components/BodyContent';
-import Footer from './components/Footer';
+//import Footer from './components/Footer';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
