@@ -17,9 +17,9 @@ function App() {
     <div className="App">
       <Header appname="TODOapp" />
       <Body />
-      <Footer />
     </div>
   );
+  /*<Footer />*/
 }
 
 export default App;
