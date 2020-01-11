@@ -66,7 +66,7 @@ class BodyContent extends Component {
                 var lastId = -1
                 savedNotes.forEach(e => { if (e.id > lastId) lastId = e.id })
                 this.setState({ noteList: savedNotes, id: lastId + 1 })
-            }, 50)
+            }, 150)
         })
     }
 
